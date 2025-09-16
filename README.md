@@ -1,131 +1,94 @@
-# 🕵️‍♀️ Wireshark Exercise —  Download From Fake Software Site
+# 🕵️ Wireshark Exercise — Malware Traffic Analysis
+
+<p align="center">
+ <img src="https://github.com/user-attachments/assets/a40a99f3-a464-4ec6-bb06-7363a7cd54a8" width="75%" alt="Cover" /> 
+</p>
 
 ## 📌 Description
-The purpose of this exercise was to review a pcap file using Wireshark and create a incident report. The user downloaded a suspicious file after searching for Google Authenticator.
+The purpose of this exercise was to review a packet capture (pcap) file using Wireshark and produce an incident report.  
+During the analysis, it was identified that the user searched for *Google Authenticator* and downloaded a suspicious file, which led to malicious activity on the host.
 
 ---
 
-## 🛠 Tools Used
-
-![image](https://img.shields.io/badge/Wireshark-1679A7?style=for-the-badge&logo=Wireshark&logoColor=white)
-![image](https://img.shields.io/badge/VirtualBox-21416b?style=for-the-badge&logo=VirtualBox&logoColor=white)
+## 🛠️ Tools Used
+- [**Wireshark**](https://www.wireshark.org) – network packet analysis  
+- [**VirusTotal**](https://www.virustotal.com/gui/home/upload) – malware hash analysis  
+- [**UrlScan.io**](https://urlscan.io) – domain/URL reputation check  
+- [**VirtualBox**](https://www.oracle.com/virtualization/technologies/vm/downloads/virtualbox-downloads.html) – virtualized lab environment  
 
 ---
 
 ## 🔗 Exercise link
 
-[Link to exercise](https://www.malware-traffic-analysis.net/2025/06/13/index.html)
-
-## 🗂 The 5 W's
-
-**Who (Observed Hosts / Actors)**  
-- Infected host IP: `<!-- INSERT IP -->`  
-- Attacker IP(s): `<!-- INSERT IP(s) -->`  
-- Hostnames / MAC addresses: `<!-- INSERT hostnames or MACs -->`
-
-**What (Activity Observed)**  
-- Description of activity (e.g., file upload, C2 beaconing, data exfiltration):  
-  `<!-- INSERT concise description -->`
-
-**When (Timestamps & Timezone)**  
-- First seen: `<!-- INSERT datetime -->`  
-- Last seen:  `<!-- INSERT datetime -->`  
-- Timezone: `<!-- INSERT timezone e.g., UTC or EST -->`
-
-**Where (Network / Ports / Protocols)**  
-- Source / destination subnets or environments: `<!-- INSERT -->`  
-- Protocols & ports observed: `<!-- INSERT (e.g., HTTP port 80, TLS 443, SMB 445) -->`
-
-**Why (Impact / Likely Purpose)**  
-- Likely intent (e.g., credential theft, data exfiltration, lateral movement): `<!-- INSERT -->`  
-- Business impact / severity: `<!-- INSERT -->`
+[Link to exercise](https://www.malware-traffic-analysis.net/2025/01/22/index.html)
 
 ---
 
-## 🔎 Methodology (How I Investigated)
-1. Loaded pcap: `<!-- INSERT file name -->`  
-2. Initial triage: used `Statistics → Conversations` and `Statistics → Endpoints`.  
-3. Applied filters (examples):  
-   - `http`  
-   - `ip.src == x.x.x.x && tcp.port == 80`  
-   - `tls.handshake`  
-4. Followed relevant streams: `Follow → TCP Stream` or `Follow → HTTP Stream`.  
-5. Extracted artifacts and corroborated with OSINT / threat intel (if applicable).
+## 🗂️ The 5 W’s of the Incident
 
-*(Replace steps with the exact commands/filters you used.)*
+**Who caused the incident?**  
+- User account: `shutchenson`  
+- Host name: `Desktop-L8C5GSJ`  
+- MAC address: `00:d0:b7:26:4a:74`  
+- IP address: `10.1.17.215`  
+
+**What happened?**  
+- User searched for Google Authenticator and downloaded a suspicious file.  
+
+**When did the incident occur?**  
+- January 22, 2025 – 11:45:56 AM  
+
+**Where did the incident happen?**  
+- On a Windows workstation (`Desktop-L8C5GSJ`).  
+
+**Why did the incident happen?**  
+- The user accessed a fraudulent site (`Authenticatoor.org`) and executed malicious downloads.
 
 ---
 
-## 🧾 Evidence / Screenshots
-<!-- Add screenshots of Wireshark filters, TCP stream, HTTP contents, DNS queries, etc. -->
-<p align="center">
-  <img src="<!-- INSERT IMAGE URL -->" alt="Wireshark Screenshot 1" width="80%" />
-</p>
+## 🔎 Findings Summary
+- The fake site `Authenticatoor.org` was visited.  
+- Three suspicious files were downloaded:  
+  - `264872`  
+  - `29842.ps1`  
+  - `pas.ps1`  
+- Command and Control (C2) traffic was established over **port 80** to IP: `5.252.153.241`.  
+- Malicious PowerShell and CMD commands executed to download and hide files within system directories.  
+- File hashes submitted to **VirusTotal** — categorized as a **Trojan**.  
 
 ---
 
 ## ⚠️ Indicators of Compromise (IOCs)
-- **IP addresses:**  
-  - `<!-- ip1 -->`  
-  - `<!-- ip2 -->`
-- **Hostnames / Domains:**  
-  - `<!-- domain1 -->`  
-  - `<!-- domain2 -->`
-- **MAC addresses:**  
-  - `<!-- mac1 -->`
-- **Suspicious URIs / File names:**  
-  - `<!-- URI or filename -->`
-- **Hashes (if extracted):**  
-  - `<!-- sha256 / md5 -->`
-- **Other artifacts:**  
-  - `<!-- e.g., User-Agent string, unique cookie, HTTP POST fields -->`
+
+**IP Address**  
+- `5.252.153.241` (C2 server)  
+
+**Domain**  
+- `Authenticatoor.org` (malicious site)  
+
+**Files / Scripts**  
+- `264872`  
+- `29842.ps1`  
+- `pas.ps1`  
+
+**Hash Values**  
+- SHA-256: `a833f27c2bb4cad31344e70386c44b5c221f031d7cd2f2a6b8601919e790161e`  
 
 ---
 
-## 🧾 Findings Summary
-- Key takeaways (3–5 bullets):  
-  - `<!-- INSERT finding 1 -->`  
-  - `<!-- INSERT finding 2 -->`  
-  - `<!-- INSERT finding 3 -->`
-
----
-
-## ✅ Conclusion & Next Steps
-- Short conclusion: `<!-- INSERT -->`  
-- Recommended next steps (e.g., block IPs, update detections, run host scans):  
-  - `<!-- INSERT -->`
-
----
-
-## 📚 References & Notes
-- PCAP source: `<!-- INSERT source or link to exercise -->`  
-- Useful commands/filters:  
-  ```text
-  # Example filters
-  ip.addr == x.x.x.x
-  http.request.method == "POST"
-  tls.handshake.type == 1
-
-
-
-
----
-
-## 🖼 Screenshots  
+## 📊 Screenshots / Evidence
 
 <details close>
 <summary>Click to View</summary>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/35cfef17-215a-4847-8726-1ae48e2e0fc3" width="80%" alt="Wireshark Conversations" />  
+  <img src="https://github.com/user-attachments/assets/287fd61c-ac56-4481-a623-a509d30082da" width="80%" alt="Image_1" />  
   <br><br>
-  <img src="https://github.com/user-attachments/assets/5ec759a6-d883-4094-91cf-ad464590ce95" width="80%" alt="HTTP Stream Analysis" />  
+  <img src="https://github.com/user-attachments/assets/85e949a6-566b-4b3c-9076-89ce4bbc993b" width="80%" alt="Image_2" />  
   <br><br>
-  <img src="https://github.com/user-attachments/assets/e00c9388-0d78-4bc1-8eb2-1a207c07af7b" width="80%" alt="DNS Query Example" />  
+  <img src="https://github.com/user-attachments/assets/1bc62517-e54e-44fb-a900-caf78d0e78f6" width="80%" alt="Image_3" />  
   <br><br>
-  <img src="https://github.com/user-attachments/assets/1fab2148-6a84-41c0-932e-521afad8db0e" width="80%" alt="DNS Query Example" />
-  <br><br>
-  <img src="https://github.com/user-attachments/assets/a17aad5b-91c6-4944-a0ef-a4fcb306602c" width="80%" alt="DNS Query Example" />
+  <img src="https://github.com/user-attachments/assets/ba447e00-2b43-454c-a326-a6a1b2d39849" width="80%" alt="Image_4" />  
 </p>
 
 </details>
